@@ -1,0 +1,3 @@
+<SubscriptionRequest Sender="SASA2" TimeStamp=":timestamp">
+  <DeleteSubscriptionsAll>true</DeleteSubscriptionsAll>
+</SubscriptionRequest>

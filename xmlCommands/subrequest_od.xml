@@ -1,0 +1,5 @@
+<SubscriptionRequest Sender="SASA2" TimeStamp=":timestamp">
+  <GMSSubscription SubscriptionID="2" ValidUntilTimeStamp=":timestamp_valid">
+    <ChannelID>DoorOpened</ChannelID>
+  </GMSSubscription>
+</SubscriptionRequest>

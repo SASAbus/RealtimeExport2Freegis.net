@@ -1,0 +1,7 @@
+<DataReadyAnswer>
+  <Acknowledge
+     TimeStamp=":timestamp"
+     Result="ok"
+     ErrorNumber="0">
+  </Acknowledge>
+</DataReadyAnswer>

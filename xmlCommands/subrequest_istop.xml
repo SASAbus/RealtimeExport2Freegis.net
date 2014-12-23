@@ -1,0 +1,5 @@
+<SubscriptionRequest Sender="SASA2" TimeStamp=":timestamp">
+  <GMSSubscription SubscriptionID="4" ValidUntilTimeStamp=":timestamp_valid">
+    <ChannelID>EndItinerary</ChannelID>
+  </GMSSubscription>
+</SubscriptionRequest>

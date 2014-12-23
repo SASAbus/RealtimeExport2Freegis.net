@@ -1,0 +1,3 @@
+<DataSupplyRequest Sender="SASA2" TimeStamp=":timestamp">
+<AllData>false</AllData>
+</DataSupplyRequest>
