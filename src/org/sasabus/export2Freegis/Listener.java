@@ -70,9 +70,9 @@ public class Listener
 			/*
 			 * Creating a webserver listening on Port 9093 to answer to dataready-requests
 			 */
-			SasaRTDataDbManager.initConnection();
+			SasaRTDataDbManager dbmanager = new SasaRTDataDbManager(); 
 			HttpServer server = HttpServer.create(new InetSocketAddress(PORTNUMBER_LISTENER), 0);
-	        server.createContext("/TmEvNotificationConsumer/gms/dataready.xml", new DataReadyManager(hostname_dataserver, PORTNUMBER_DATARECIEVER));
+	        server.createContext("/TmEvNotificationConsumer/gms/dataready.xml", new DataReadyManager(hostname_dataserver, PORTNUMBER_DATARECIEVER, dbmanager));
 	        server.setExecutor(Executors.newCachedThreadPool());
 	        server.start();
 			

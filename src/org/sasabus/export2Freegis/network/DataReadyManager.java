@@ -67,11 +67,14 @@ public class DataReadyManager implements HttpHandler
 	
 	private int portnumber = 0;
 	
-	public DataReadyManager(String hostname, int portnumber)
+	private SasaRTDataDbManager dbmanager = null;
+	
+	public DataReadyManager(String hostname, int portnumber, SasaRTDataDbManager dbmanager)
 	{
 		super();
 		this.portnumber = portnumber;
 		this.hostname = hostname;
+		this.dbmanager = dbmanager;
 	}
 	
 	/* (non-Javadoc)
@@ -112,10 +115,11 @@ public class DataReadyManager implements HttpHandler
 			DataRequestManager teqrequest = new DataRequestManager(this.hostname, this.portnumber);
 			String datarequest = teqrequest.datarequest();
 			ArrayList<TeqObjects> requestelements = TeqXMLUtils.extractFromXML(datarequest);
+			int vtcounter = 0;
 			if(!requestelements.isEmpty())
 			{
 				Iterator<TeqObjects> iterator = requestelements.iterator();
-				System.out.println("List of Elements requested!");
+				System.out.println("Sending List of Elements!");
 				String geoJson = "{\"type\":\"FeatureCollection\",\"features\":[";
 				while(iterator.hasNext())
 				{
@@ -123,6 +127,7 @@ public class DataReadyManager implements HttpHandler
 					if(object instanceof VehicleTracking)
 					{
 						geoJson += ((VehicleTracking)object).toGeoJson() + ",";
+						++vtcounter;
 					}
 				}
 				if(geoJson.charAt(geoJson.length()-1) == ',')
@@ -130,6 +135,7 @@ public class DataReadyManager implements HttpHandler
 					geoJson = geoJson.substring(0, geoJson.length() - 1);
 				}
 				geoJson += "]}";
+				System.out.println("GeoJson sent! (Nr of elements: " + vtcounter + ")");
 				System.out.println("GeoJson: " + geoJson);
 				HttpPost subrequest = new HttpPost(DATASEND);
 	
@@ -140,10 +146,10 @@ public class DataReadyManager implements HttpHandler
 				subrequest.setEntity(requestEntity);
 				
 				CloseableHttpResponse response = httpClient.execute(subrequest);
-				System.out.println("Stauts JsonSend Response: " + response.getStatusLine().getStatusCode());
-				System.out.println("Status JsonSend Phrase: " + response.getStatusLine().getReasonPhrase());
+				//System.out.println("Stauts JsonSend Response: " + response.getStatusLine().getStatusCode());
+				//System.out.println("Status JsonSend Phrase: " + response.getStatusLine().getReasonPhrase());
 				httpClient.close();
-				SasaRTDataDbManager.insertIntoDatabase(requestelements);
+				dbmanager.insertIntoDatabase(requestelements);
 			}
 		}
 		catch(Exception e)

@@ -82,8 +82,8 @@ public class DataRequestManager
 		subrequest.setEntity(requestEntity);
 		
 		CloseableHttpResponse response = httpClient.execute(subrequest);
-		System.out.println("Stauts Response: " + response.getStatusLine().getStatusCode());
-		System.out.println("Status Phrase: " + response.getStatusLine().getReasonPhrase());
+		//System.out.println("Stauts Response: " + response.getStatusLine().getStatusCode());
+		//System.out.println("Status Phrase: " + response.getStatusLine().getReasonPhrase());
 		HttpEntity responseEntity = response.getEntity();
 		String responsebody = "";
 	    if (responseEntity != null) {

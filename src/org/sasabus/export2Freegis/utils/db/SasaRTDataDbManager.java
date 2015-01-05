@@ -21,10 +21,13 @@
  */
 package org.sasabus.export2Freegis.utils.db;
 
+import java.io.File;
+import java.io.FileInputStream;
 import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.PreparedStatement;
 import java.sql.Statement;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.Properties;
@@ -45,16 +48,18 @@ import com.sun.org.apache.xml.internal.utils.StopParseException;
 public class SasaRTDataDbManager
 {
 
+	public static final String dbconn_properties = "./DBconnection.properties";
 	
-	private static Connection conn = null;
 	
-	private static PreparedStatement vehicleTracking = null;
+	private Connection conn = null;
 	
-	private static PreparedStatement doorOpened = null;
+	private PreparedStatement vehicleTracking = null;
 	
-	private static PreparedStatement startItinerary = null;
+	private PreparedStatement doorOpened = null;
 	
-	private static PreparedStatement stopItinerary = null;
+	private PreparedStatement startItinerary = null;
+	
+	private PreparedStatement stopItinerary = null;
 	
 	private static final String query_vehicle = "INSERT INTO VehicleTracking (CodiceVeicolo, CodiceTurno, Timestamp, Latitudine," +
 			  " Longitudine, Rit_min, Rit_sec, IDTurnoMacchina, IDCorsa, MatricolaAutista, Odometro, CodiceCorsa) " +
@@ -73,12 +78,17 @@ public class SasaRTDataDbManager
 			  " VALUES (?, ?, ?, ?, ?)";
 
 	
-	public static synchronized void initConnection() throws Exception
+	public SasaRTDataDbManager() throws Exception
 	{
-		if(conn != null && !conn.isClosed())
+		initConnection();
+	}
+	
+	private void initConnection() throws Exception
+	{
+		if(conn == null || conn.isClosed())
 		{
 			Properties properties = new Properties();
-			properties.load(Thread.currentThread().getContextClassLoader().getResourceAsStream("DBconnection.properties"));
+			properties.load(new FileInputStream(dbconn_properties));
 			String url = properties.getProperty("jdbc.url");
 			String driver = properties.getProperty("jdbc.driver");
 			String username = properties.getProperty("jdbc.username");
@@ -94,15 +104,23 @@ public class SasaRTDataDbManager
 		}
 	}
 	
-	private static synchronized void insertVehicleTracking(VehicleTracking vt) throws Exception
+	private synchronized void insertVehicleTracking(VehicleTracking vt) throws Exception
 	{
-		System.out.println("Before INSERTING!!!!!");
 		if(vehicleTracking != null && !vehicleTracking.isClosed())
 		{
-			System.out.println("INSERTING VEHICLES!!!!!!!!");
-			vehicleTracking.setString(1, vt.getVehicleCode());
+			int vehicleNumber = 0;
+			if(vt.getVehicleCode().indexOf(' ') != -1)
+			{
+				vehicleNumber = Integer.parseInt(vt.getVehicleCode().substring(0, vt.getVehicleCode().indexOf(' ')));
+			}
+			else
+			{
+				vehicleNumber = Integer.parseInt(vt.getVehicleCode());
+			}
+			vehicleTracking.setInt(1, vehicleNumber);
 			vehicleTracking.setLong(2, vt.getVehicleTripNumber());
-			vehicleTracking.setString(3, vt.getNotification_timestamp());
+			SimpleDateFormat newdate = new SimpleDateFormat("yyy-MM-dd hh:mm:ss");
+			vehicleTracking.setString(3, newdate.format(vt.getTimestamp()));
 			vehicleTracking.setDouble(4, vt.getLat());
 			vehicleTracking.setDouble(5, vt.getLon());
 			vehicleTracking.setInt(6, vt.getRit_min());
@@ -111,18 +129,31 @@ public class SasaRTDataDbManager
 			vehicleTracking.setLong(9, vt.getTripId());
 			vehicleTracking.setInt(10, vt.getDriver());
 			vehicleTracking.setDouble(11, vt.getOdometro());
-			vehicleTracking.setString(12, vt.getTripCode());
+			if(vt.getTripCode().equals(""))
+				vehicleTracking.setLong(12, 0);
+			else
+				vehicleTracking.setLong(12, Long.parseLong(vt.getTripCode()));
 			vehicleTracking.execute();
 			
 		}
 	}
 	
-	private static synchronized void insertDoorOpened(DoorOpened doorOpen) throws Exception
+	private synchronized void insertDoorOpened(DoorOpened doorOpen) throws Exception
 	{
 		if(doorOpened != null && !doorOpened.isClosed())
 		{
-			doorOpened.setString(1, doorOpen.getVehicleCode());
-			doorOpened.setString(2, doorOpen.getNotification_timestamp());
+			int vehicleNumber = 0;
+			if(doorOpen.getVehicleCode().indexOf(' ') != -1)
+			{
+				vehicleNumber = Integer.parseInt(doorOpen.getVehicleCode().substring(0, doorOpen.getVehicleCode().indexOf(' ')));
+			}
+			else
+			{
+				vehicleNumber = Integer.parseInt(doorOpen.getVehicleCode());
+			}
+			doorOpened.setInt(1, vehicleNumber);
+			SimpleDateFormat newdate = new SimpleDateFormat("yyy-MM-dd hh:mm:ss");
+			doorOpened.setString(2, newdate.format(doorOpen.getTimestamp()));
 			doorOpened.setDouble(3, doorOpen.getLat());
 			doorOpened.setDouble(4, doorOpen.getLon());
 			doorOpened.setDouble(5, doorOpen.getOdometro());
@@ -131,33 +162,59 @@ public class SasaRTDataDbManager
 		}
 	}
 	
-	private static synchronized void insertStartItinerary(StartItinerary si) throws Exception
+	private synchronized void insertStartItinerary(StartItinerary si) throws Exception
 	{
 		if(startItinerary != null && !startItinerary.isClosed())
 		{
-			startItinerary.setString(1, si.getVehicleCode());
-			startItinerary.setString(2, si.getNotification_timestamp());
+			int vehicleNumber = 0;
+			if(si.getVehicleCode().indexOf(' ') != -1)
+			{
+				vehicleNumber = Integer.parseInt(si.getVehicleCode().substring(0, si.getVehicleCode().indexOf(' ')));
+			}
+			else
+			{
+				vehicleNumber = Integer.parseInt(si.getVehicleCode());
+			}
+			startItinerary.setInt(1, vehicleNumber);
+			SimpleDateFormat newdate = new SimpleDateFormat("yyy-MM-dd hh:mm:ss");
+			startItinerary.setString(2, newdate.format(si.getTimestamp()));
 			startItinerary.setDouble(3, si.getLat());
 			startItinerary.setDouble(4, si.getLon());
 			startItinerary.setLong(5, si.getTripId());
 			startItinerary.setDouble(6, si.getOdometro());
-			startItinerary.setString(7, si.getTripCode());
+			if(si.getTripCode().equals(""))
+				startItinerary.setLong(7, 0);
+			else
+				startItinerary.setLong(7, Long.parseLong(si.getTripCode()));
 			startItinerary.execute();
 			
 		}
 	}
 	
-	private static synchronized void insertStopItinerary(EndItinerary ei) throws Exception
+	private synchronized void insertStopItinerary(EndItinerary ei) throws Exception
 	{
 		if(stopItinerary != null && !stopItinerary.isClosed())
 		{
-			stopItinerary.setString(1, ei.getVehicleCode());
-			stopItinerary.setString(2, ei.getNotification_timestamp());
+			int vehicleNumber = 0;
+			if(ei.getVehicleCode().indexOf(' ') != -1)
+			{
+				vehicleNumber = Integer.parseInt(ei.getVehicleCode().substring(0, ei.getVehicleCode().indexOf(' ')));
+			}
+			else
+			{
+				vehicleNumber = Integer.parseInt(ei.getVehicleCode());
+			}
+			SimpleDateFormat newdate = new SimpleDateFormat("yyy-MM-dd hh:mm:ss");
+			stopItinerary.setInt(1, vehicleNumber);
+			stopItinerary.setString(2, newdate.format(ei.getTimestamp()));
 			stopItinerary.setDouble(3, ei.getLat());
 			stopItinerary.setDouble(4, ei.getLon());
 			stopItinerary.setLong(5, ei.getTripId());
 			stopItinerary.setDouble(6, ei.getOdometro());
-			stopItinerary.setString(7, ei.getTripCode());
+			if(ei.getTripCode().equals(""))
+				stopItinerary.setLong(7, 0);
+			else
+				stopItinerary.setLong(7, Long.parseLong(ei.getTripCode()));
 			stopItinerary.execute();
 			
 		}
@@ -165,7 +222,7 @@ public class SasaRTDataDbManager
 	
 	
 	
-	public static synchronized void insertIntoDatabase(ArrayList<TeqObjects> elements) throws Exception
+	public synchronized void insertIntoDatabase(ArrayList<TeqObjects> elements) throws Exception
 	{
 		Iterator<TeqObjects> iterator = elements.iterator();
 		while(iterator.hasNext())
@@ -194,7 +251,7 @@ public class SasaRTDataDbManager
 		}
 	}
 	
-	public static synchronized void closeConnection() throws Exception
+	public synchronized void closeConnection() throws Exception
 	{
 		System.out.println("CLOSE CLOSE CLOSE CLOSE CLOSE CLOSE!!!");
 		conn.close();
