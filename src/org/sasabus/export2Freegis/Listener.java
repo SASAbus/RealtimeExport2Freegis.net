@@ -29,30 +29,35 @@ import java.util.concurrent.Executors;
 
 import org.sasabus.export2Freegis.network.DataReadyManager;
 import org.sasabus.export2Freegis.network.SubscriptionManager;
+import org.sasabus.export2Freegis.utils.db.SasaRTDataDbManager;
 
 import com.sun.net.httpserver.HttpServer;
 
 /**
+ * This is the main class of this Project, which is created to Manage in a concurrent way 
+ * the gms-service of SASA which provide the real-time-data 
  * @author windegger
  *
  */
 public class Listener
 {
 
-	
 	public static final int PORTNUMBER_LISTENER = 8083;
 	
 	public static final int PORTNUMBER_DATARECIEVER = 9093;
 		
 	public static final String hostname_dataserver = "192.168.2.4";
-	/**
-	 * @param args
-	 */
+	
+	
 	public static void main(String[] args) {
-		// TODO Auto-generated method stub
 		ServerSocket portlistener = null;
 		try
 		{
+			/*
+			 * Unsubscribing from all Services and subscribing to the gms-services to
+			 * get a clean System. (GMS-Services are described in the VDV453 Paper
+			 * https://www.vdv.de/453v2.3.2__sds.pdf.pdfx?forced=true, available only in german)
+			 */
 			SubscriptionManager teqserver = new SubscriptionManager(hostname_dataserver, 
 					PORTNUMBER_DATARECIEVER);
 			teqserver.unsubscribe();
@@ -62,6 +67,10 @@ public class Listener
 				System.exit(-1);
 			}
 			System.out.println("Successfully subscribed");
+			/*
+			 * Creating a webserver listening on Port 9093 to answer to dataready-requests
+			 */
+			SasaRTDataDbManager.initConnection();
 			HttpServer server = HttpServer.create(new InetSocketAddress(PORTNUMBER_LISTENER), 0);
 	        server.createContext("/TmEvNotificationConsumer/gms/dataready.xml", new DataReadyManager(hostname_dataserver, PORTNUMBER_DATARECIEVER));
 	        server.setExecutor(Executors.newCachedThreadPool());

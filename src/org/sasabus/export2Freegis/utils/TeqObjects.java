@@ -174,6 +174,6 @@ public abstract class TeqObjects
 	public void setOdometro(double odometro) {
 		this.odometro = odometro;
 	}
-	
-	 public abstract String toGeoJson();
+	 
+	 public abstract String getInsertQuery();
 }

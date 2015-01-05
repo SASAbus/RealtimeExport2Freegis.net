@@ -28,6 +28,7 @@ import java.io.IOException;
 import java.io.InputStreamReader;
 import java.io.OutputStreamWriter;
 import java.net.HttpURLConnection;
+import java.sql.Connection;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
@@ -42,6 +43,8 @@ import org.apache.http.impl.client.CloseableHttpClient;
 import org.apache.http.impl.client.HttpClients;
 import org.sasabus.export2Freegis.utils.TeqObjects;
 import org.sasabus.export2Freegis.utils.TeqXMLUtils;
+import org.sasabus.export2Freegis.utils.VehicleTracking;
+import org.sasabus.export2Freegis.utils.db.SasaRTDataDbManager;
 
 import com.sun.net.httpserver.HttpExchange;
 import com.sun.net.httpserver.HttpHandler;
@@ -86,7 +89,6 @@ public class DataReadyManager implements HttpHandler
 			{
 				requestStringBuff.append((char) b);
 			}
-			System.out.println(requestStringBuff.toString());
 			Scanner sc = new Scanner(new File(DATAACKNOWLEDGE));
 			String rdyackstring = "";
 			while (sc.hasNextLine())
@@ -118,11 +120,14 @@ public class DataReadyManager implements HttpHandler
 				while(iterator.hasNext())
 				{
 					TeqObjects object = iterator.next();
-					geoJson += object.toGeoJson();
-					if(iterator.hasNext())
+					if(object instanceof VehicleTracking)
 					{
-						geoJson += ",";
+						geoJson += ((VehicleTracking)object).toGeoJson() + ",";
 					}
+				}
+				if(geoJson.charAt(geoJson.length()-1) == ',')
+				{
+					geoJson = geoJson.substring(0, geoJson.length() - 1);
 				}
 				geoJson += "]}";
 				System.out.println("GeoJson: " + geoJson);
@@ -138,6 +143,7 @@ public class DataReadyManager implements HttpHandler
 				System.out.println("Stauts JsonSend Response: " + response.getStatusLine().getStatusCode());
 				System.out.println("Status JsonSend Phrase: " + response.getStatusLine().getReasonPhrase());
 				httpClient.close();
+				SasaRTDataDbManager.insertIntoDatabase(requestelements);
 			}
 		}
 		catch(Exception e)

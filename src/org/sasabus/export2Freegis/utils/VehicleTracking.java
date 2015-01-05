@@ -200,7 +200,8 @@ public class VehicleTracking extends TeqObjects
 		return timestamp.substring(0, 22) + ":" + timestamp.substring(22);
 	}
 	
-	@Override
+
+	
 	public String toGeoJson()
 	{
 		/*
@@ -216,6 +217,15 @@ public class VehicleTracking extends TeqObjects
 						+ "\"notification_date\":\"" + this.getNotification_timestamp() + "\","
 						+ "\"notification_validity_date\":\"" + this.getNotification_valid_timestamp() + "\","
 						+ "\"acknowledge_date\":\"" + this.getAck_timestamp() + "\"}}";
+	}
+
+	/* (non-Javadoc)
+	 * @see org.sasabus.export2Freegis.utils.TeqObjects#getInsertQuery()
+	 */
+	@Override
+	public String getInsertQuery() {
+		// TODO Auto-generated method stub
+		return null;
 	}
 	
 	

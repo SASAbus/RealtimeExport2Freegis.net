@@ -41,7 +41,7 @@ public class TeqXMLUtils
 {
 	public static ArrayList<TeqObjects> extractFromXML(String xml) throws Exception
 	{
-		System.out.println("XML Parsing:\nLength of xml: " + xml.length());
+		//System.out.println("XML Parsing:\nLength of xml: " + xml.length() + "\n" + xml + "\n");
 		if(xml.trim().equals("") || xml.length() == 0)
 			return new ArrayList<>();
 		return parseXmlFile(xml.trim());
@@ -59,35 +59,57 @@ public class TeqXMLUtils
 		// parse using builder to get DOM representation of the XML file
 		Document dom = db.parse(is);
 
-		Element gmsmessageElement = dom.getDocumentElement();
-		NodeList nl = gmsmessageElement.getElementsByTagName("GMSNotification");
+		Element gmsmessageListElement = dom.getDocumentElement();
 		ArrayList<TeqObjects> elementslist = new ArrayList<>();
-		Element acknowledge = (Element)gmsmessageElement.getElementsByTagName("Acknowledge").item(0);
-		String ack_timestamp = "";
-		if(acknowledge != null)
+		NodeList nlmessages = gmsmessageListElement.getElementsByTagName("GMSMessage");
+		if(nlmessages != null && nlmessages.getLength() != 0)
 		{
-			ack_timestamp = acknowledge.getAttribute("TimeStamp");
-		}
-		if (nl != null && nl.getLength() > 0)
-		{
-			for (int i = 0; i < nl.getLength(); i++)
+			for (int j = 0; j < nlmessages.getLength(); j++)
 			{
-				// get the GSMNotification element
-				Element gmsnotificationelement = (Element) nl.item(i);
 				
-				if(gmsnotificationelement.getChildNodes().getLength() == 7)
+				Element gmsmessage = (Element)nlmessages.item(j);
+				NodeList nl = gmsmessage.getElementsByTagName("GMSNotification");
+				Element acknowledge = (Element)gmsmessage.getElementsByTagName("Acknowledge").item(0);
+				String ack_timestamp = "";
+				if(acknowledge != null)
 				{
-					String type = gmsnotificationelement.getChildNodes().item(1).getTextContent();
-					long notificationId = Long.parseLong(gmsnotificationelement.getChildNodes().item(3).getTextContent());
-					String csvcontent = gmsnotificationelement.getChildNodes().item(6).getTextContent();
-					if(type.equalsIgnoreCase("VehicleTracking"))
+					ack_timestamp = acknowledge.getAttribute("TimeStamp");
+				}
+				if (nl != null && nl.getLength() > 0)
+				{
+					for (int i = 0; i < nl.getLength(); i++)
 					{
-						VehicleTracking vtnew = VehicleTracking.getFromCSV(csvcontent, notificationId, ack_timestamp, gmsnotificationelement.getAttribute("TimeStamp"), gmsnotificationelement.getAttribute("ValidUntilTimeStamp"));
-						elementslist.add(vtnew);
+						// get the GSMNotification element
+						Element gmsnotificationelement = (Element) nl.item(i);
+						
+						if(gmsnotificationelement.getChildNodes().getLength() == 7)
+						{
+							String type = gmsnotificationelement.getChildNodes().item(1).getTextContent();
+							long notificationId = Long.parseLong(gmsnotificationelement.getChildNodes().item(3).getTextContent());
+							String csvcontent = gmsnotificationelement.getChildNodes().item(6).getTextContent();
+							if(type.equalsIgnoreCase("VehicleTracking"))
+							{
+								VehicleTracking vtnew = VehicleTracking.getFromCSV(csvcontent, notificationId, ack_timestamp, gmsnotificationelement.getAttribute("TimeStamp"), gmsnotificationelement.getAttribute("ValidUntilTimeStamp"));
+								elementslist.add(vtnew);
+							}
+							else if(type.equals("StartItinerary"))
+							{
+								StartItinerary si = StartItinerary.getFromCSV(csvcontent, notificationId, ack_timestamp, gmsnotificationelement.getAttribute("TimeStamp"), gmsnotificationelement.getAttribute("ValidUntilTimeStamp"));
+								elementslist.add(si);
+							}
+							else if(type.equals("EndItinerary"))
+							{
+								EndItinerary ei = EndItinerary.getFromCSV(csvcontent, notificationId, ack_timestamp, gmsnotificationelement.getAttribute("TimeStamp"), gmsnotificationelement.getAttribute("ValidUntilTimeStamp"));
+								elementslist.add(ei);
+							}
+							else if(type.equals("DoorOpened"))
+							{
+								DoorOpened door = DoorOpened.getFromCSV(csvcontent, notificationId, ack_timestamp, gmsnotificationelement.getAttribute("TimeStamp"), gmsnotificationelement.getAttribute("ValidUntilTimeStamp"));
+								elementslist.add(door);
+							}
+						}
 					}
 				}
-				
-
 			}
 		}
 		return elementslist;
