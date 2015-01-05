@@ -219,14 +219,6 @@ public class VehicleTracking extends TeqObjects
 						+ "\"acknowledge_date\":\"" + this.getAck_timestamp() + "\"}}";
 	}
 
-	/* (non-Javadoc)
-	 * @see org.sasabus.export2Freegis.utils.TeqObjects#getInsertQuery()
-	 */
-	@Override
-	public String getInsertQuery() {
-		// TODO Auto-generated method stub
-		return null;
-	}
 	
 	
 }

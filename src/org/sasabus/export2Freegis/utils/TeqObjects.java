@@ -175,5 +175,4 @@ public abstract class TeqObjects
 		this.odometro = odometro;
 	}
 	 
-	 public abstract String getInsertQuery();
 }

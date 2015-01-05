@@ -119,7 +119,7 @@ public class SasaRTDataDbManager
 			}
 			vehicleTracking.setInt(1, vehicleNumber);
 			vehicleTracking.setLong(2, vt.getVehicleTripNumber());
-			SimpleDateFormat newdate = new SimpleDateFormat("yyy-MM-dd hh:mm:ss");
+			SimpleDateFormat newdate = new SimpleDateFormat("yyy-MM-dd HH:mm:ss");
 			vehicleTracking.setString(3, newdate.format(vt.getTimestamp()));
 			vehicleTracking.setDouble(4, vt.getLat());
 			vehicleTracking.setDouble(5, vt.getLon());
@@ -152,7 +152,7 @@ public class SasaRTDataDbManager
 				vehicleNumber = Integer.parseInt(doorOpen.getVehicleCode());
 			}
 			doorOpened.setInt(1, vehicleNumber);
-			SimpleDateFormat newdate = new SimpleDateFormat("yyy-MM-dd hh:mm:ss");
+			SimpleDateFormat newdate = new SimpleDateFormat("yyy-MM-dd HH:mm:ss");
 			doorOpened.setString(2, newdate.format(doorOpen.getTimestamp()));
 			doorOpened.setDouble(3, doorOpen.getLat());
 			doorOpened.setDouble(4, doorOpen.getLon());
@@ -176,7 +176,7 @@ public class SasaRTDataDbManager
 				vehicleNumber = Integer.parseInt(si.getVehicleCode());
 			}
 			startItinerary.setInt(1, vehicleNumber);
-			SimpleDateFormat newdate = new SimpleDateFormat("yyy-MM-dd hh:mm:ss");
+			SimpleDateFormat newdate = new SimpleDateFormat("yyy-MM-dd HH:mm:ss");
 			startItinerary.setString(2, newdate.format(si.getTimestamp()));
 			startItinerary.setDouble(3, si.getLat());
 			startItinerary.setDouble(4, si.getLon());
@@ -204,7 +204,7 @@ public class SasaRTDataDbManager
 			{
 				vehicleNumber = Integer.parseInt(ei.getVehicleCode());
 			}
-			SimpleDateFormat newdate = new SimpleDateFormat("yyy-MM-dd hh:mm:ss");
+			SimpleDateFormat newdate = new SimpleDateFormat("yyy-MM-dd HH:mm:ss");
 			stopItinerary.setInt(1, vehicleNumber);
 			stopItinerary.setString(2, newdate.format(ei.getTimestamp()));
 			stopItinerary.setDouble(3, ei.getLat());
@@ -231,22 +231,18 @@ public class SasaRTDataDbManager
 			if(item instanceof VehicleTracking)
 			{
 				insertVehicleTracking((VehicleTracking)item);
-				System.out.println("Insert VehicleTracking " + item.getVehicleCode());
 			}
 			else if(item instanceof StartItinerary)
 			{
 				insertStartItinerary((StartItinerary)item);
-				System.out.println("Insert StartItinerary " + item.getVehicleCode());
 			}
 			else if(item instanceof EndItinerary)
 			{
 				insertStopItinerary((EndItinerary)item);
-				System.out.println("Insert EndItinerary " + item.getVehicleCode());
 			}
 			else if(item instanceof DoorOpened)
 			{
 				insertDoorOpened((DoorOpened)item);
-				System.out.println("Insert DoorOpened " + item.getVehicleCode());
 			}
 		}
 	}

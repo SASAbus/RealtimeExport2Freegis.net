@@ -135,8 +135,7 @@ public class DataReadyManager implements HttpHandler
 					geoJson = geoJson.substring(0, geoJson.length() - 1);
 				}
 				geoJson += "]}";
-				System.out.println("GeoJson sent! (Nr of elements: " + vtcounter + ")");
-				System.out.println("GeoJson: " + geoJson);
+				System.out.println("GeoJson sent! (Nr of elements: " + vtcounter + "/" + requestelements.size() + " )");
 				HttpPost subrequest = new HttpPost(DATASEND);
 	
 				StringEntity requestEntity = new StringEntity(geoJson, ContentType.create("application/json", "UTF-8")); 

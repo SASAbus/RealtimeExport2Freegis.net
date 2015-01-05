@@ -48,7 +48,7 @@ public class StartItinerary extends TeqObjects
 	{
 		String[] list = csv.split(",(?=([^\"]*\"[^\"]*\")*[^\"]*$)");
 		StartItinerary myVehicleTracking = null;
-		if(list.length == 12)
+		if(list.length == 8)
 		{
 			myVehicleTracking = new StartItinerary();
 			myVehicleTracking.setVehicleCode(list[0].replaceAll("\"", ""));
@@ -59,10 +59,10 @@ public class StartItinerary extends TeqObjects
 			myVehicleTracking.setLon(Double.parseDouble(list[3].replaceAll("\"", "").replaceAll(",", ".")));
 			if(list[4].replaceAll("\"", "").length() != 0)
 				myVehicleTracking.setTripId(Long.parseLong(list[4].replaceAll("\"", "")));
-			if(list[5].replaceAll("\"", "").length() != 0)
-				myVehicleTracking.setOdometro(Double.parseDouble(list[5].replaceAll("\"", "").replaceAll(",", ".")));
 			if(list[6].replaceAll("\"", "").length() != 0)
-				myVehicleTracking.setTripCode(list[6].replaceAll("\"", ""));
+				myVehicleTracking.setOdometro(Double.parseDouble(list[6].replaceAll("\"", "").replaceAll(",", ".")));
+			if(list[7].replaceAll("\"", "").length() != 0)
+				myVehicleTracking.setTripCode(list[7].replaceAll("\"", ""));
 			myVehicleTracking.setNotificationId(notification);
 			myVehicleTracking.setAck_timestamp(ack_timestamp);
 			myVehicleTracking.setNotification_timestamp(notification_timestamp);
@@ -110,14 +110,6 @@ public class StartItinerary extends TeqObjects
 	
 	
 
-	/* (non-Javadoc)
-	 * @see org.sasabus.export2Freegis.utils.TeqObjects#getInsertQuery()
-	 */
-	@Override
-	public String getInsertQuery() {
-		// TODO Auto-generated method stub
-		return null;
-	}
 	
 	
 }

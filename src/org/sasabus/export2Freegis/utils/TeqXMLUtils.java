@@ -52,7 +52,6 @@ public class TeqXMLUtils
 		// get the factory
 		DocumentBuilder db = DocumentBuilderFactory.newInstance()
 				.newDocumentBuilder();
-
 		InputSource is = new InputSource();
 		is.setCharacterStream(new StringReader(textContent));
 
@@ -66,7 +65,6 @@ public class TeqXMLUtils
 		{
 			for (int j = 0; j < nlmessages.getLength(); j++)
 			{
-				
 				Element gmsmessage = (Element)nlmessages.item(j);
 				NodeList nl = gmsmessage.getElementsByTagName("GMSNotification");
 				Element acknowledge = (Element)gmsmessage.getElementsByTagName("Acknowledge").item(0);
@@ -92,17 +90,17 @@ public class TeqXMLUtils
 								VehicleTracking vtnew = VehicleTracking.getFromCSV(csvcontent, notificationId, ack_timestamp, gmsnotificationelement.getAttribute("TimeStamp"), gmsnotificationelement.getAttribute("ValidUntilTimeStamp"));
 								elementslist.add(vtnew);
 							}
-							else if(type.equals("StartItinerary"))
+							else if(type.equalsIgnoreCase("StartItinerary"))
 							{
 								StartItinerary si = StartItinerary.getFromCSV(csvcontent, notificationId, ack_timestamp, gmsnotificationelement.getAttribute("TimeStamp"), gmsnotificationelement.getAttribute("ValidUntilTimeStamp"));
 								elementslist.add(si);
 							}
-							else if(type.equals("EndItinerary"))
+							else if(type.equalsIgnoreCase("EndItinerary"))
 							{
 								EndItinerary ei = EndItinerary.getFromCSV(csvcontent, notificationId, ack_timestamp, gmsnotificationelement.getAttribute("TimeStamp"), gmsnotificationelement.getAttribute("ValidUntilTimeStamp"));
 								elementslist.add(ei);
 							}
-							else if(type.equals("DoorOpened"))
+							else if(type.equalsIgnoreCase("DoorOpened"))
 							{
 								DoorOpened door = DoorOpened.getFromCSV(csvcontent, notificationId, ack_timestamp, gmsnotificationelement.getAttribute("TimeStamp"), gmsnotificationelement.getAttribute("ValidUntilTimeStamp"));
 								elementslist.add(door);

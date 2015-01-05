@@ -42,17 +42,17 @@ public class DoorOpened extends TeqObjects
 	{
 		String[] list = csv.split(",(?=([^\"]*\"[^\"]*\")*[^\"]*$)");
 		DoorOpened myVehicleTracking = null;
-		if(list.length == 12)
+		if(list.length == 6)
 		{
 			myVehicleTracking = new DoorOpened();
 			myVehicleTracking.setVehicleCode(list[0].replaceAll("\"", ""));
 			SimpleDateFormat sdf = new SimpleDateFormat("dd/MM/yyyy HH.mm.ss");//"yyyy-MM-dd'T'HH:mm:ssZ");
 			Date datum = sdf.parse(list[1].replaceAll("\"", ""));//.substring(0,22) +  list[1].substring(23));
 			myVehicleTracking.setTimestamp(datum);
-			myVehicleTracking.setLat(Double.parseDouble(list[2].replaceAll("\"", "").replaceAll(",", ".")));
-			myVehicleTracking.setLon(Double.parseDouble(list[3].replaceAll("\"", "").replaceAll(",", ".")));
-			if(list[4].replaceAll("\"", "").length() != 0)
-				myVehicleTracking.setOdometro(Double.parseDouble(list[4].replaceAll("\"", "").replaceAll(",", ".")));
+			myVehicleTracking.setLat(Double.parseDouble(list[3].replaceAll("\"", "").replaceAll(",", ".")));
+			myVehicleTracking.setLon(Double.parseDouble(list[4].replaceAll("\"", "").replaceAll(",", ".")));
+			if(list[5].replaceAll("\"", "").length() != 0)
+				myVehicleTracking.setOdometro(Double.parseDouble(list[5].replaceAll("\"", "").replaceAll(",", ".")));
 			myVehicleTracking.setNotificationId(notification);
 			myVehicleTracking.setAck_timestamp(ack_timestamp);
 			myVehicleTracking.setNotification_timestamp(notification_timestamp);
@@ -74,16 +74,6 @@ public class DoorOpened extends TeqObjects
 		SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ssZ");
 		String timestamp = sdf.format(this.getTimestamp());
 		return timestamp.substring(0, 22) + ":" + timestamp.substring(22);
-	}
-	
-
-	/* (non-Javadoc)
-	 * @see org.sasabus.export2Freegis.utils.TeqObjects#getInsertQuery()
-	 */
-	@Override
-	public String getInsertQuery() {
-		// TODO Auto-generated method stub
-		return null;
 	}
 	
 	
