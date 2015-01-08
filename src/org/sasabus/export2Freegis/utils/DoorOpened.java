@@ -69,12 +69,5 @@ public class DoorOpened extends TeqObjects
 		return "DoorOpened: " + this.getVehicleCode();
 	}
 	
-	private String formatToISO8601(Date date)
-	{
-		SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ssZ");
-		String timestamp = sdf.format(this.getTimestamp());
-		return timestamp.substring(0, 22) + ":" + timestamp.substring(22);
-	}
-	
 	
 }

@@ -28,7 +28,6 @@ import java.io.IOException;
 import java.io.InputStreamReader;
 import java.io.OutputStreamWriter;
 import java.net.HttpURLConnection;
-import java.sql.Connection;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
@@ -109,7 +108,6 @@ public class DataReadyManager implements HttpHandler
 			rdyackstring = rdyackstring.replaceAll(":timestamp", timestamp);
 			
 			httpExchange.sendResponseHeaders(HttpURLConnection.HTTP_OK, rdyackstring.length());
-			
 			out.write(rdyackstring);
 			out.flush();
 			DataRequestManager teqrequest = new DataRequestManager(this.hostname, this.portnumber);
@@ -150,6 +148,12 @@ public class DataReadyManager implements HttpHandler
 				httpClient.close();
 				dbmanager.insertIntoDatabase(requestelements);
 			}
+
+		}
+		catch(IOException e)
+		{
+			System.err.println(e.getMessage());
+			e.printStackTrace();
 		}
 		catch(Exception e)
 		{

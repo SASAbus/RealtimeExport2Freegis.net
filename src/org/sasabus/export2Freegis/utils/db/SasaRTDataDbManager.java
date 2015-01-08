@@ -21,7 +21,6 @@
  */
 package org.sasabus.export2Freegis.utils.db;
 
-import java.io.File;
 import java.io.FileInputStream;
 import java.sql.Connection;
 import java.sql.DriverManager;
@@ -37,8 +36,6 @@ import org.sasabus.export2Freegis.utils.EndItinerary;
 import org.sasabus.export2Freegis.utils.StartItinerary;
 import org.sasabus.export2Freegis.utils.TeqObjects;
 import org.sasabus.export2Freegis.utils.VehicleTracking;
-
-import com.sun.org.apache.xml.internal.utils.StopParseException;
 
 
 /**
