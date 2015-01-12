@@ -25,6 +25,7 @@ package org.sasabus.export2Freegis;
 
 import java.net.InetSocketAddress;
 import java.net.ServerSocket;
+import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 
 import org.sasabus.export2Freegis.network.DataReadyManager;
@@ -47,6 +48,8 @@ public class Listener
 	public static final int PORTNUMBER_DATARECIEVER = 9093;
 		
 	public static final String hostname_dataserver = "192.168.2.4";
+	
+	public static final int poolSize = 30;
 	
 	
 	public static void main(String[] args) {
@@ -73,7 +76,7 @@ public class Listener
 			SasaRTDataDbManager dbmanager = new SasaRTDataDbManager(); 
 			HttpServer server = HttpServer.create(new InetSocketAddress(PORTNUMBER_LISTENER), 0);
 	        server.createContext("/TmEvNotificationConsumer/gms/dataready.xml", new DataReadyManager(hostname_dataserver, PORTNUMBER_DATARECIEVER, dbmanager));
-	        server.setExecutor(Executors.newCachedThreadPool());
+			server.setExecutor(Executors.newFixedThreadPool(poolSize));
 	        server.start();
 			
 		}

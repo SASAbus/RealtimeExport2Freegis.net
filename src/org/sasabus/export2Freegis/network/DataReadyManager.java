@@ -81,6 +81,7 @@ public class DataReadyManager implements HttpHandler
 	 */
 	@Override
 	public void handle(HttpExchange httpExchange) throws IOException {
+		long start = System.currentTimeMillis();
 		BufferedReader in = new BufferedReader(new InputStreamReader(httpExchange.getRequestBody(), "UTF-8"));
 		BufferedWriter out = new BufferedWriter(new OutputStreamWriter(httpExchange.getResponseBody()));
 		try 
@@ -110,6 +111,7 @@ public class DataReadyManager implements HttpHandler
 			httpExchange.sendResponseHeaders(HttpURLConnection.HTTP_OK, rdyackstring.length());
 			out.write(rdyackstring);
 			out.flush();
+			long before_elab = System.currentTimeMillis() - start;
 			DataRequestManager teqrequest = new DataRequestManager(this.hostname, this.portnumber);
 			String datarequest = teqrequest.datarequest();
 			ArrayList<TeqObjects> requestelements = TeqXMLUtils.extractFromXML(datarequest);
@@ -141,12 +143,16 @@ public class DataReadyManager implements HttpHandler
 				CloseableHttpClient httpClient = HttpClients.createDefault();
 				
 				subrequest.setEntity(requestEntity);
-				
+				long after_elab = System.currentTimeMillis() - start;
 				CloseableHttpResponse response = httpClient.execute(subrequest);
 				//System.out.println("Stauts JsonSend Response: " + response.getStatusLine().getStatusCode());
 				//System.out.println("Status JsonSend Phrase: " + response.getStatusLine().getReasonPhrase());
 				httpClient.close();
+				long before_db = System.currentTimeMillis() - start;
 				dbmanager.insertIntoDatabase(requestelements);
+				System.out.format("Thread time (ms) : Before elab: %d, After Elab (before http sending): %d, Before db: %d, Total: %d, Thread name: %s, Objects elaborated: %d", 
+						before_elab, after_elab, before_db, (System.currentTimeMillis() - start), Thread.currentThread().getName(), requestelements.size());
+				System.out.println("");
 			}
 
 		}

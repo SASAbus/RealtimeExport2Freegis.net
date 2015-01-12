@@ -92,6 +92,7 @@ public class SasaRTDataDbManager
 			String password = properties.getProperty("jdbc.password");
 			Class.forName(driver).newInstance();
 			conn = DriverManager.getConnection(url, username, password);
+			conn.setAutoCommit(true);
 			Statement statement = conn.createStatement();
 			statement.executeQuery("SET NAMES utf8");
 			vehicleTracking = conn.prepareStatement(query_vehicle);
@@ -103,6 +104,7 @@ public class SasaRTDataDbManager
 	
 	private synchronized void insertVehicleTracking(VehicleTracking vt) throws Exception
 	{
+		initConnection();
 		if(vehicleTracking != null && !vehicleTracking.isClosed())
 		{
 			int vehicleNumber = 0;
@@ -137,6 +139,7 @@ public class SasaRTDataDbManager
 	
 	private synchronized void insertDoorOpened(DoorOpened doorOpen) throws Exception
 	{
+		initConnection();
 		if(doorOpened != null && !doorOpened.isClosed())
 		{
 			int vehicleNumber = 0;
@@ -161,6 +164,7 @@ public class SasaRTDataDbManager
 	
 	private synchronized void insertStartItinerary(StartItinerary si) throws Exception
 	{
+		initConnection();
 		if(startItinerary != null && !startItinerary.isClosed())
 		{
 			int vehicleNumber = 0;
@@ -190,6 +194,7 @@ public class SasaRTDataDbManager
 	
 	private synchronized void insertStopItinerary(EndItinerary ei) throws Exception
 	{
+		initConnection();
 		if(stopItinerary != null && !stopItinerary.isClosed())
 		{
 			int vehicleNumber = 0;
