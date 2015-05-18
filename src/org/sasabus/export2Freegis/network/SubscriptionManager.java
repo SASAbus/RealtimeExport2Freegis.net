@@ -83,6 +83,8 @@ public class SubscriptionManager
 			subscriptionstring = subscriptionstring.replaceAll(":timestamp_valid", valid_until);
 			subscriptionstring = subscriptionstring.replaceAll(":timestamp", timestamp);
 	
+			System.out.println("Subscriptionstring: " + subscriptionstring);
+			
 			String requestString = "http://" + this.address + ":" + this.portnumber_sender + "/TmEvNotificationService/gms/subscription.xml";
 			
 			HttpPost subrequest = new HttpPost(requestString);
@@ -114,7 +116,7 @@ public class SubscriptionManager
 				}
 				return false;
 			}
-			System.out.println("Subscription of " + SUBFILEARRAY[i]);
+			System.out.println("Subscription of " + SUBFILEARRAY[i] + " with Statuscode " + response.getStatusLine().getStatusCode());
 		}
 		return true;
 
