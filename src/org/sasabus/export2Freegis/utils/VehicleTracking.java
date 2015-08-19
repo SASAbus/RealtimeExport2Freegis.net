@@ -216,6 +216,7 @@ public class VehicleTracking extends TeqObjects
 						+ "\"frt_fid\":\"" + this.getTripCode() + "\",\"notification_id\":\"" + this.getNotificationId() + "\","
 						+ "\"notification_date\":\"" + this.getNotification_timestamp() + "\","
 						+ "\"notification_validity_date\":\"" + this.getNotification_valid_timestamp() + "\","
+						+ "\"vehicleCode\":\"" + this.getVehicleCode() + "\","
 						+ "\"acknowledge_date\":\"" + this.getAck_timestamp() + "\"}}";
 	}
 
