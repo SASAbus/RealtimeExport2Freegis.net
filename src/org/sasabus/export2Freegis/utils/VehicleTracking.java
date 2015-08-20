@@ -207,7 +207,7 @@ public class VehicleTracking extends TeqObjects
 		/*
 		 * {"type":"Feature","geometry":{"type":"Point","coordinates":[11.346833,46.483133]},"properties":{"gps_date":"2014-12-22T10:53:28+01:00",
 		 * "delay_sec":"2","frt_fid":"001107200030","notification_id":"635548426854018792",
-		 * "notification_date":"2014-12-22T09:58:06+00:00","notification_validity_date":"2014-12-22T09:58:11+00:00",
+		 * "notification_date":"2014-12-22T09:58:06+00:00","notification_validity_date":"2014-12-22T09:58:11+00:00", "vehicleCode":"399", 
 		 * "acknowledge_date":"2014-12-22T09:58:11+00:00"}}
 		 */
 		
