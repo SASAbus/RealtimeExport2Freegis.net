@@ -49,7 +49,7 @@ public class Listener
 		
 	public static final String hostname_dataserver = "192.168.2.4";
 	
-	public static final int poolSize = 30;
+	public static final int poolSize = 80;
 	
 	
 	public static void main(String[] args) {
